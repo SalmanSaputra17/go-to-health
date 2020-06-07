@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Admin;
 use App\Models\Article;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Repositories\Interfaces\ArticleRepositoryInterface;
@@ -11,7 +10,7 @@ class ArticleRepository implements ArticleRepositoryInterface
 {
 	public function all($option)
 	{
-		$field = Article::select(['id', 'title', 'slug', 'content', 'banner', 'status', 'created_by', 'created_at', 'updated_at']);
+		$field = Article::select('*');
 
 		return $option == 'all' ? $field->orderBy('created_at', 'desc')->get() : $field;
 	}
@@ -49,6 +48,8 @@ class ArticleRepository implements ArticleRepositoryInterface
 	public function delete($id)
 	{
 		$model = $this->findById($id);
+		\Storage::delete($model->banner);
+
 		$model->delete();
 	}
 
@@ -56,11 +57,6 @@ class ArticleRepository implements ArticleRepositoryInterface
 	{
 		$model = $this->findById($id);
 		$model->update(['status' => $status]);
-	}
-
-	public function authorArray()
-	{
-		return Admin::pluck('name', 'id')->all();
 	}
 
 	private function processImage($banner, $action, $model = null)

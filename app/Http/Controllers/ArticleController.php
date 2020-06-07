@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
@@ -86,7 +87,7 @@ class ArticleController extends BaseController
             'publish' => 'Publish'
         ];
 
-        $author = $this->repository->authorArray();
+        $author = $this->authorArray();
 
     	return $this->renderView('index', [
             'status' => $status,
@@ -160,5 +161,10 @@ class ArticleController extends BaseController
         alert('Success', 'New Article has been deleted.', 'success');
         
         return redirect(url($this->route));
+    }
+
+    private function authorArray()
+    {
+        return Admin::pluck('name', 'id')->all();
     }
 }

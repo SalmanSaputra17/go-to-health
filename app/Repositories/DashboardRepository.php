@@ -47,8 +47,8 @@ class DashboardRepository implements DashboardRepositoryInterface
 	{
 		$activity = Cache::remember('activity', (5 * 60), function() {
 			return UserActivityLog::select(\DB::raw('COUNT(*) as count'))
-					->groupBy(\DB::raw("Month(created_at)"))
-					->pluck('count');
+				->groupBy(\DB::raw("Month(created_at)"))
+				->pluck('count');
 		});
 
 		$chart = new Chart;
