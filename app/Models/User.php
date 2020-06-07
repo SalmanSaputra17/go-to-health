@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
 	use Notifiable, HasApiTokens;
 
+    protected $table = 'users';
+
 	/**
      * The attributes that are mass assignable.
      *
@@ -37,6 +39,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function generateUID()
+    {
+        $model = self::count();
+
+        return strtoupper("UID-" . self::makeLoop($model) . \Str::random(3));
+    }
+
+    public static function makeLoop($num)
+    {
+        $result = str_pad($num + 1, 7, 0, STR_PAD_LEFT);
+
+        return $result;
+    }
 
 	public function logActivity()
 	{
