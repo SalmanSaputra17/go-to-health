@@ -116,7 +116,7 @@ class ArticleController extends BaseController
     {
         $result = $this->repository->draftOrPublish(decryptStringValue($id), 'draft');
 
-        alert('Success', 'New Article has been drafted.', 'success');
+        alert('Success', 'Article has been drafted.', 'success');
         
         return redirect(url($this->route));
     }
@@ -125,7 +125,7 @@ class ArticleController extends BaseController
     {
         $result = $this->repository->draftOrPublish(decryptStringValue($id), 'publish');
 
-        alert('Success', 'New Article has been published.', 'success');
+        alert('Success', 'Article has been published.', 'success');
         
         return redirect(url($this->route));
     }
@@ -149,7 +149,7 @@ class ArticleController extends BaseController
     {
         $result = $this->repository->update($request, decryptStringValue($id));
 
-        alert('Success', 'New Article has been updated.', 'success');
+        alert('Success', 'Article has been updated.', 'success');
         
         return redirect(url($this->route));
     }
@@ -158,7 +158,7 @@ class ArticleController extends BaseController
     {
         $result = $this->repository->delete(decryptStringValue($id));
 
-        alert('Success', 'New Article has been deleted.', 'success');
+        alert('Success', 'Article has been deleted.', 'success');
         
         return redirect(url($this->route));
     }
