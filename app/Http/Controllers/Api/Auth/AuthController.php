@@ -31,7 +31,7 @@ class AuthController extends Controller
 
     		return response()->json([
     			'status' => 'SUCCESS',
-    			'message' => 'Successfully created new user!' 
+    			'message' => 'Successfully created new user.' 
     		], 201);
     	} catch(\Exception $e) {
     		\DB::rollback();
@@ -45,16 +45,52 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        try {
+            $credentials = request(['email', 'password']);
 
+            if (!Auth::guard('driver-api')->attempt($credentials))
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'Unauthorized.'
+                ], 401);
+
+            $user = Auth::guard('driver-api')->user();
+
+            $tokenResult = $user->createToken('GoToHealth');
+            $token = $tokenResult->token;
+
+            if ($request->remember_me)
+                $token->expires_at = Carbon::now()->addWeeks(1);
+
+            $token->save();
+
+            return response()->json([
+                'access_token' => $tokenResult->accessToken,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse(
+                    $tokenResult->token->expires_at
+                )->toDateTimeString(),
+            ]);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'error: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function logout(Request $request)
     {
-    	
+    	$request->user()->token()->revoke();
+
+        return response()->json([
+            'status' => 'SUCCESS',
+            'message' => 'Successfully logout.'
+        ], 201);
     }
 
     public function user(Request $request)
     {
-    	
+        return response()->json($request->user());    	
     }
 }
