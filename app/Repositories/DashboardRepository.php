@@ -14,15 +14,15 @@ class DashboardRepository implements DashboardRepositoryInterface
 {
 	public function loadTotalData()
 	{
-		$foods = Cache::remember('foods', (5 * 60), function() {
+		$foods = Cache::rememberForever('__foods', function() {
             return Food::all()->count();
         });
 
-		$articles = Cache::remember('articles', (5 * 60), function() {
+		$articles = Cache::rememberForever('__articles', function() {
             return Article::all()->count();
         });
 
-        $users = Cache::remember('users', (5 * 60), function() {
+        $users = Cache::rememberForever('__users', function() {
             return User::all()->count();
         });
 
@@ -45,7 +45,7 @@ class DashboardRepository implements DashboardRepositoryInterface
 
 	public function lineChartSource($request)
 	{
-		$activity = Cache::remember('activity', (5 * 60), function() {
+		$activity = Cache::rememberForever('__activities', function() {
 			return UserActivityLog::select(\DB::raw('COUNT(*) as count'))
 				->groupBy(\DB::raw("Month(created_at)"))
 				->pluck('count');

@@ -40,6 +40,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            cache()->forget("__users");
+        });
+
+        self::updating(function ($model) {
+            cache()->forget("__users");
+        });
+
+        self::deleting(function ($model) {
+            cache()->forget("__users");
+        });
+    }
+
     public static function generateUID()
     {
         $model = self::count();

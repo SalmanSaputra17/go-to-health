@@ -26,6 +26,23 @@ class Article extends Model
         ];
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::creating(function ($model) {
+            cache()->forget("__articles");
+        });
+
+        self::updating(function ($model) {
+            cache()->forget("__articles");
+        });
+
+        self::deleting(function ($model) {
+            cache()->forget("__articles");
+        });
+    }
+
     public function admin()
     {
     	return $this->belongsTo(\App\Admin::class, 'created_by', 'id');
