@@ -83,17 +83,13 @@ class AuthController extends Controller
             $tokenResult = $user->createToken('GoToHealth');
             $token = $tokenResult->token;
 
-            if ($request->remember_me)
-                $token->expires_at = Carbon::now()->addWeeks(1);
-
+            $token->expires_at = $request->remember_me ? Carbon::now()->addYears(1) : Carbon::now()->addHour();
             $token->save();
 
             return response()->json([
                 'access_token' => $tokenResult->accessToken,
                 'token_type' => 'Bearer',
-                'expires_at' => Carbon::parse(
-                    $tokenResult->token->expires_at
-                )->toDateTimeString(),
+                'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
             ]);
         } catch(\Exception $e) {
             return response()->json([
