@@ -21,7 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'auth'], function() {
     Route::post('register', 'Api\Auth\AuthController@register');
     Route::post('login', 'Api\Auth\AuthController@login');
-    // Route::get('register/activate/{token}', 'Api/AuthController@activate');
+    Route::get('register/activate/{token}', 'Api\Auth\AuthController@activate');
 
     Route::group(['middleware' => 'auth:api'], function() {
         Route::get('user', 'Api\Auth\AuthController@currentUser');

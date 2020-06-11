@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Notifications\RegisterActivate;
 
 class AuthController extends Controller
 {
@@ -25,7 +26,10 @@ class AuthController extends Controller
     			'date_of_birth' => $request->date_of_birth,
     			'email' => $request->email,
     			'password' => Hash::make($request->password),
+                'activation_token' => \Str::random(60),
     		]);
+
+            $user->notify(new RegisterActivate($user));
 
     		\DB::commit();
 
@@ -43,10 +47,31 @@ class AuthController extends Controller
     	}
     }
 
+    public function activate($token)
+    {
+        $user = User::whereActivationToken($token)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => 'This activation token is invalid.'
+            ], 404);
+        }
+
+        $user->update([
+            'active' => true,
+            'activation_token' => null
+        ]);
+
+        return $user;
+    }
+
     public function login(LoginRequest $request)
     {
         try {
             $credentials = request(['email', 'password']);
+            $credentials['active'] = 1;
+            $credentials['deleted_at'] = null;
 
             if (!Auth::guard('driver-api')->attempt($credentials))
                 return response()->json([
