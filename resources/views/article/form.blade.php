@@ -21,7 +21,7 @@
 					<div class="form-group">
 						{!! Form::label('banner') !!}
 						{!! Form::file('banner', ['class' => 'form-control', 'id' => 'banner']) !!}
-					
+
 						@if(!empty($model->banner))
 	                    	{!! Html::image(\Storage::url($model->banner), null, ['style' => 'width: 150px; height: 100px; margin-top: 10px;']) !!}
 	                    @endif
