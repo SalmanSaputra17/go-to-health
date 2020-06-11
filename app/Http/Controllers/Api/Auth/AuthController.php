@@ -51,12 +51,11 @@ class AuthController extends Controller
     {
         $user = User::whereActivationToken($token)->first();
 
-        if (!$user) {
-            return response()->json([
+        if (!$user)
+             return response()->json([
                 'status' => 'FAILED',
                 'message' => 'This activation token is invalid.'
             ], 404);
-        }
 
         $user->update([
             'active' => true,

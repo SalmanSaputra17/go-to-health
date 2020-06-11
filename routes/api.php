@@ -18,19 +18,19 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'auth'], function() {
-    Route::post('register', 'Api\Auth\AuthController@register');
-    Route::post('login', 'Api\Auth\AuthController@login');
-    Route::get('register/activate/{token}', 'Api\Auth\AuthController@activate');
+Route::group(['namespace' => 'Api\Auth', 'prefix' => 'auth'], function() {
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+    Route::get('register/activate/{token}', 'AuthController@activate');
 
     Route::group(['middleware' => 'auth:api'], function() {
-        Route::get('user', 'Api\Auth\AuthController@currentUser');
-        Route::get('logout', 'Api\Auth\AuthController@logout');
+        Route::get('user', 'AuthController@currentUser');
+        Route::get('logout', 'AuthController@logout');
     });
 });
 
-// Route::group(['middleware' => 'api', 'prefix' => 'password'], function() {
-//     Route::post('create', 'Api\Auth\PasswordResetController@create');
-//     Route::get('find/{token}', 'Api\Auth\PasswordResetController@find');
-//     Route::post('reset', 'Api\Auth\PasswordResetController@reset');
-// });
+Route::group(['namespace' => 'Api\Auth', 'middleware' => 'api', 'prefix' => 'password'], function() {
+    Route::post('request', 'PasswordResetController@request');
+    Route::get('find/{token}', 'PasswordResetController@find');
+    Route::post('reset', 'PasswordResetController@reset');
+});
