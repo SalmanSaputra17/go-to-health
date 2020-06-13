@@ -8,7 +8,7 @@ use App\Models\PasswordReset;
 use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\Auth\PasswordResetRequest;
+use App\Http\Requests\Api\Auth\PasswordResetRequest as PRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 
@@ -66,7 +66,7 @@ class PasswordResetController extends Controller
         return response()->json($passwordReset);
     }
 
-    public function reset(PasswordResetRequest $request)
+    public function reset(PRequest $request)
     {
         $passwordReset = PasswordReset::where([
             ['token', $request->token],
@@ -93,6 +93,9 @@ class PasswordResetController extends Controller
         $passwordReset->delete();
         $user->notify(new PasswordResetSuccess($passwordReset));
 
-        return response()->json($user);
+        return response()->json([
+            'status' => 'SUCCESS',
+            'message' => 'Success change your password.'
+        ]);
     }
 }
