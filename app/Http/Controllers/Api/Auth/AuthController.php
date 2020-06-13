@@ -90,7 +90,7 @@ class AuthController extends Controller
                 'access_token' => $tokenResult->accessToken,
                 'token_type' => 'Bearer',
                 'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString(),
-            ]);
+            ], 201);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'FAILED',
@@ -106,7 +106,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'SUCCESS',
             'message' => 'Successfully logout.'
-        ], 201);
+        ], 200);
     }
 
     public function currentUser(Request $request)

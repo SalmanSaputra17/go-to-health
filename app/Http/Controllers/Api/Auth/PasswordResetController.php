@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\PasswordReset;
-use Illuminate\Http\Request;
 use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
+use Illuminate\Http\Request;
+use App\Http\Requests\Api\Auth\PasswordResetRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 
@@ -65,14 +66,8 @@ class PasswordResetController extends Controller
         return response()->json($passwordReset);
     }
 
-    public function reset(Request $request)
+    public function reset(PasswordResetRequest $request)
     {
-    	$request->validate([
-        	'email' => 'required|string|email',
-            'password' => 'required|string|confirmed',
-            'token' => 'required|string'
-        ]);
-
         $passwordReset = PasswordReset::where([
             ['token', $request->token],
             ['email', $request->email]

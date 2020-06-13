@@ -39,3 +39,7 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'art
     Route::get('/', 'ArticleController@index');
     Route::get('/{slug}', 'ArticleController@show');
 });
+
+Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'calculation'], function() {
+    Route::post('/ibm', 'CalculationController@calculateIBM');
+});

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Article;
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\ArticleRepositoryInterface;
 
@@ -23,13 +23,12 @@ class ArticleController extends Controller
     	try {
     		$result = $this->repository->all('field', ['id', 'title', 'slug', 'status', 'created_at'])
     			->whereStatus('publish')
-    			->limit(5)
     			->get();
 
 	    	return response()->json([
 	    		'status' => 'SUCCESS',
 	    		'data' => $result
-	    	], 201);
+	    	], 200);
     	} catch(\Exception $e) {
 			return response()->json([
 	    		'status' => 'FAILED',
@@ -46,7 +45,7 @@ class ArticleController extends Controller
     		return response()->json([
 	    		'status' => 'SUCCESS',
 	    		'data' => $result
-	    	], 201);
+	    	], 200);
     	} catch(\Exception $e) {
     		return response()->json([
 	    		'status' => 'FAILED',
