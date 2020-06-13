@@ -34,7 +34,7 @@ class UserActivityLogController extends BaseController
 
     public function getUserList()
     {
-        $model = $this->repository->userList('all');
+        $model = $this->repository->userList();
 
         return Table::of($model)
             ->addColumn('action', function($model) {

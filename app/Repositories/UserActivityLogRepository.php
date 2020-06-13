@@ -8,11 +8,11 @@ use App\Repositories\Interfaces\UserActivityLogRepositoryInterface;
 
 class UserActivityLogRepository implements UserActivityLogRepositoryInterface
 {
-	public function userList($option)
+	public function userList($option = 'get')
 	{
 		$field = User::select('*');
 
-		return $option == 'all' ? $field->orderBy('username', 'asc')->get() : $field;
+		return $option == 'get' ? $field->orderBy('username', 'asc')->get() : $field;
 	}
 
 	public function findUserById($id)

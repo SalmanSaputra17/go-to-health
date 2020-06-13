@@ -7,11 +7,11 @@ use App\Repositories\Interfaces\FoodRepositoryInterface;
 
 class FoodRepository implements FoodRepositoryInterface
 {
-	public function all($option)
+	public function all($option = 'get')
 	{
 		$field = Food::select(['id', 'name', 'calory', 'portion']);
 
-		return $option == 'all' ? $field->orderBy('name', 'asc')->get() : $field;
+		return $option == 'get' ? $field->orderBy('name', 'asc')->get() : $field;
 	}
 
 	public function create($request)

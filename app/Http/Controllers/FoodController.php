@@ -30,7 +30,7 @@ class FoodController extends BaseController
 
     public function getData()
     {
-    	$model = $this->repository->all('all');
+    	$model = $this->repository->all();
 
     	return Table::of($model)
     		->addColumn('action', function($model) {
