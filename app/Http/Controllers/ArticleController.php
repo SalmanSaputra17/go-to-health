@@ -31,7 +31,7 @@ class ArticleController extends BaseController
 
     public function getData(Request $request)
     {
-    	$model = $this->repository->all('field');
+    	$model = $this->repository->all('field', ['id', 'title', 'slug', 'status', 'created_by', 'created_at', 'updated_at']);
 
         if (!empty($request->filter_status)) {
             $model = $model->whereStatus($request->filter_status);

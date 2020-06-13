@@ -8,11 +8,11 @@ use App\Repositories\Interfaces\ArticleRepositoryInterface;
 
 class ArticleRepository implements ArticleRepositoryInterface
 {
-	public function all($option)
+	public function all($option = 'get', $field = ['*'])
 	{
-		$field = Article::select('*');
+		$result = Article::select($field);
 
-		return $option == 'all' ? $field->orderBy('created_at', 'desc')->get() : $field;
+		return $option == 'get' ? $result->orderBy('created_at', 'desc')->get() : $result;
 	}
 
 	public function create($request)

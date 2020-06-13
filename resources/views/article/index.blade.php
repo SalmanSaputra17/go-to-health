@@ -60,7 +60,7 @@
 	          				<th>Author</th>
 	          				<th>Created At</th>
 	          				<th>Last Updated</th>
-	          				<th>Actions</th>
+	          				<th width="40%">Actions</th>
 	          			</tr>
 	          		</thead>
 	          		<tbody></tbody>

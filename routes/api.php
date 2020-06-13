@@ -34,3 +34,8 @@ Route::group(['namespace' => 'Api\Auth', 'middleware' => 'api', 'prefix' => 'pas
     Route::get('find/{token}', 'PasswordResetController@find');
     Route::post('reset', 'PasswordResetController@reset');
 });
+
+Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'article'], function() {
+    Route::get('/', 'ArticleController@index');
+    Route::get('/{slug}', 'ArticleController@show');
+});
