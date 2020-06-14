@@ -40,6 +40,10 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'art
     Route::get('/{slug}', 'ArticleController@show');
 });
 
+Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'food'], function() {
+    Route::get('/', 'FoodController@index');
+});
+
 Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'calculation'], function() {
     Route::post('/ibm', 'CalculationController@calculateIBM');
     Route::post('/day-calory', 'CalculationController@calculateDayCalory');
