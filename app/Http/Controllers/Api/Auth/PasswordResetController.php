@@ -16,86 +16,107 @@ class PasswordResetController extends Controller
 {
     public function request(Request $request)
     {
-		$request->validate([
-			'email' => 'required|string|email'
-		]);
+		try {
+            $request->validate([
+                'email' => 'required|string|email'
+            ]);
 
-		$user = User::whereEmail($request->email)->first();
+            $user = User::whereEmail($request->email)->first();
 
-		if (!$user)
-			return response()->json([
-				'status' => 'FAILED',
-				'message' => 'We can\'t find a user with that e-mail address.'
-			], 404);
+            if (!$user)
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'We can\'t find a user with that e-mail address.'
+                ], 404);
 
-		$passwordReset = PasswordReset::updateOrCreate([
-			'email' => $request->email,
-		], [
-			'email' => $request->email,
-			'token' => \Str::random(60),
-		]);
+            $passwordReset = PasswordReset::updateOrCreate([
+                'email' => $request->email,
+            ], [
+                'email' => $request->email,
+                'token' => \Str::random(60),
+            ]);
 
-		if ($user && $passwordReset)
-            $user->notify(new PasswordResetRequest($passwordReset->token));
+            if ($user && $passwordReset)
+                $user->notify(new PasswordResetRequest($passwordReset->token));
 
-        return response()->json([
-        	'status' => 'SUCCESS',
-            'message' => 'We have emailed your password reset link!'
-        ], 200);
+            return response()->json([
+                'status' => 'SUCCESS',
+                'message' => 'We have emailed your password reset link.'
+            ], 200);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => $e->getMessage(),
+            ], 200);
+        }
     }
 
     public function find($token)
     {
-    	$passwordReset = PasswordReset::whereToken($token)->first();        
+    	try {
+            $passwordReset = PasswordReset::whereToken($token)->first();        
 
-    	if (!$passwordReset)
+            if (!$passwordReset)
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'This password reset token is invalid.'
+                ], 404);        
+
+            if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+                $passwordReset->delete();
+
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'This password reset token is invalid.'
+                ], 404);
+            }
+
+            return response()->json($passwordReset, 200);
+        } catch(\Exception $e) {
             return response()->json([
                 'status' => 'FAILED',
-                'message' => 'This password reset token is invalid.'
-            ], 404);        
-
-        if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
-            $passwordReset->delete();
-
-            return response()->json([
-            	'status' => 'FAILED',
-                'message' => 'This password reset token is invalid.'
-            ], 404);
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json($passwordReset);
     }
 
     public function reset(PRequest $request)
     {
-        $passwordReset = PasswordReset::where([
-            ['token', $request->token],
-            ['email', $request->email]
-        ])->first();
+        try {
+            $passwordReset = PasswordReset::where([
+                ['token', $request->token],
+                ['email', $request->email]
+            ])->first();
 
-        if (!$passwordReset)
+            if (!$passwordReset)
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'This password reset token is invalid.'
+                ], 404);
+
+            $user = User::whereEmail($passwordReset->email)->first();
+
+            if (!$user)
+                return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'We can\'t find a user with that e-mail address.'
+                ], 404);
+
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            $passwordReset->delete();
+            $user->notify(new PasswordResetSuccess($passwordReset));
+
             return response()->json([
-            	'status' => 'FAILED',
-                'message' => 'This password reset token is invalid.'
-            ], 404);
-
-        $user = User::whereEmail($passwordReset->email)->first();
-
-        if (!$user)
+                'status' => 'SUCCESS',
+                'message' => 'Success change your password.'
+            ], 200);
+        } catch(\Exception $e) {
             return response()->json([
-            	'status' => 'FAILED',
-                'message' => 'We can\'t find a user with that e-mail address.'
-            ], 404);
-
-        $user->password = Hash::make($request->password);
-        $user->save();
-
-        $passwordReset->delete();
-        $user->notify(new PasswordResetSuccess($passwordReset));
-
-        return response()->json([
-            'status' => 'SUCCESS',
-            'message' => 'Success change your password.'
-        ]);
+                'status' => 'FAILED',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

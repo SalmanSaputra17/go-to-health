@@ -20,7 +20,10 @@
 					</div>
 					<div class="form-group">
 						{!! Form::label('banner') !!}
-						{!! Form::file('banner', ['class' => 'form-control', 'id' => 'banner']) !!}
+						<div class="custom-file">
+							{!! Form::file('banner', ['class' => 'custom-file-input', 'id' => 'banner']) !!}
+							<label class="custom-file-label" for="customFile">Choose file</label>
+						</div>
 
 						@if(!empty($model->banner))
 	                    	{!! Html::image(\Storage::url($model->banner), null, ['style' => 'width: 150px; height: 100px; margin-top: 10px;']) !!}

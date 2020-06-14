@@ -35,7 +35,7 @@ class AuthController extends Controller
 
     		return response()->json([
     			'status' => 'SUCCESS',
-    			'message' => 'Successfully created new user.' 
+    			'message' => 'Successfully created new user, please activate your account.' 
     		], 201);
     	} catch(\Exception $e) {
     		\DB::rollback();
@@ -49,20 +49,30 @@ class AuthController extends Controller
 
     public function activate($token)
     {
-        $user = User::whereActivationToken($token)->first();
+        try {
+            $user = User::whereActivationToken($token)->first();
 
-        if (!$user)
-             return response()->json([
+            if (!$user)
+                 return response()->json([
+                    'status' => 'FAILED',
+                    'message' => 'This activation token is invalid.'
+                ], 404);
+
+            $user->update([
+                'active' => true,
+                'activation_token' => null
+            ]);
+
+            return response()->json([
+                'status' => 'SUCCESS',
+                'message' => 'Your account has been activate, please login.'
+            ], 200);
+        } catch(\Exception $e) {
+            return response()->json([
                 'status' => 'FAILED',
-                'message' => 'This activation token is invalid.'
-            ], 404);
-
-        $user->update([
-            'active' => true,
-            'activation_token' => null
-        ]);
-
-        return $user;
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function login(LoginRequest $request)
@@ -101,16 +111,30 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-    	$request->user()->token()->revoke();
+    	try {
+            $request->user()->token()->revoke();
 
-        return response()->json([
-            'status' => 'SUCCESS',
-            'message' => 'Successfully logout.'
-        ], 200);
+            return response()->json([
+                'status' => 'SUCCESS',
+                'message' => 'Successfully logout.'
+            ], 200);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function currentUser(Request $request)
     {
-        return response()->json($request->user());    	
+        try {
+            return response()->json($request->user(), 200);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'FAILED',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
