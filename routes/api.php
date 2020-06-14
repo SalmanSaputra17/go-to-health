@@ -49,3 +49,5 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'cal
     Route::post('/day-calory', 'CalculationController@calculateDayCalory');
     Route::post('/food-calory', 'CalculationController@calculateFoodCalory');
 });
+
+Route::post('/webhook/create-log', 'Api\WebhookController@createLog')->middleware('api');
