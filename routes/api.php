@@ -43,4 +43,5 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'art
 Route::group(['namespace' => 'Api', 'middleware' => 'auth:api', 'prefix' => 'calculation'], function() {
     Route::post('/ibm', 'CalculationController@calculateIBM');
     Route::post('/day-calory', 'CalculationController@calculateDayCalory');
+    Route::post('/food-calory', 'CalculationController@calculateFoodCalory');
 });

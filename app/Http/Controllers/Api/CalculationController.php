@@ -64,4 +64,21 @@ class CalculationController extends Controller
     		], 500);
     	}
     }
+
+    public function calculateFoodCalory(FoodCaloryRequest $request)
+    {
+    	try {
+    		$result = $this->foodCaloryService->setFoods($request->foods)->calculate();
+
+    		return response()->json([
+    			'status' => 'SUCCESS',
+    			'result' => $result,
+    		], 200);
+    	} catch(\Exception $e) {
+    		return response()->json([
+    			'status' => 'FAILED',
+    			'message' => $e->getMessage(),
+    		], 500);
+    	}
+    }
 }
