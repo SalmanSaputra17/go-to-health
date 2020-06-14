@@ -34,7 +34,29 @@ class CalculationController extends Controller
     		return response()->json([
     			'status' => 'SUCCESS',
     			'result' => $result,
-    		], 201);
+    		], 200);
+    	} catch(\Exception $e) {
+    		return response()->json([
+    			'status' => 'FAILED',
+    			'message' => $e->getMessage(),
+    		], 500);
+    	}
+    }
+
+    public function calculateDayCalory(DayCaloryRequest $request)
+    {
+    	try {
+    		$result = $this->dayCaloryService->setHeight($request->height)
+    			->setWeight($request->weight)
+    			->setGender($request->gender)
+    			->setDateOfBirth($request->date_of_birth)
+    			->setActivityLevel($request->activity_level)
+    			->calculate();
+
+			return response()->json([
+    			'status' => 'SUCCESS',
+    			'result' => $result,
+    		], 200);    		
     	} catch(\Exception $e) {
     		return response()->json([
     			'status' => 'FAILED',

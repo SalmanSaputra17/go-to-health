@@ -23,23 +23,13 @@ class IBM
 
 	public function calculate()
 	{
-		$height = $this->height;
-		$weight = $this->weight;
-
-		if ($height > 0 && $weight > 0) {
-			$toMeter = $height / 100;
-	        $IBM = round($weight / ($toMeter * $toMeter), 2);
-	    
-	        return [
-	        	"IBM" => $IBM,
-	        	"category" => $this->mapCategory($IBM)
-	        ];
-		}
-
-		return [
-			"IBM" => 0,
-			"category" => null
-		];
+		$toMeter = $this->height / 100;
+        $IBM = round($this->weight / ($toMeter * $toMeter), 2);
+    
+        return [
+        	"IBM" => $IBM,
+        	"category" => $this->mapCategory($IBM)
+        ];
 	}
 
 	private function mapCategory($param)

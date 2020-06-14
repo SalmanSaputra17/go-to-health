@@ -13,7 +13,7 @@ class DayCaloryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class DayCaloryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'height' => 'required|numeric|gt:0',
+            'weight' => 'required|numeric|gt:0',
+            'gender' => 'required|string',
+            'date_of_birth' => 'required|date',
+            'activity_level' => 'required|string'
         ];
     }
 }

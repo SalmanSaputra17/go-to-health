@@ -42,7 +42,7 @@ class PasswordResetController extends Controller
             return response()->json([
                 'status' => 'SUCCESS',
                 'message' => 'We have emailed your password reset link.'
-            ], 200);
+            ], 201);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'FAILED',
