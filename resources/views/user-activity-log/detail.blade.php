@@ -84,7 +84,7 @@ $(document).ready(function() {
     });
 
     $("#btn-filter").on('click',function(){
-    	table.ajax.url("{{ url($__route . '/user-log/' . $user->id) }}?" + $("#form-filter").serialize()).load();
+    	table.ajax.url("{{ url($__route . '/user-log/' . encryptStringValue($user->id)) }}?" + $("#form-filter").serialize()).load();
     });
 });
 </script>
