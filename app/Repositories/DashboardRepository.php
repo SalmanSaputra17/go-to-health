@@ -46,16 +46,35 @@ class DashboardRepository implements DashboardRepositoryInterface
 	public function lineChartSource($request)
 	{
 		$activities = Cache::rememberForever('__activities', function() {
-			return UserActivityLog::select(\DB::raw('COUNT(*) as count'))
-				->groupBy(\DB::raw("Month(created_at)"))
-				->pluck('count');
+			$months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+			$query = UserActivityLog::select(\DB::raw('MONTH(created_at) as month, COUNT(*) as total'))
+				->whereRaw('YEAR(created_at) = YEAR(NOW())')
+				->groupBy("month")
+				->pluck('total', 'month')
+				->toArray();
+
+			for ($i = 0; $i < count($months); $i++) { 
+				if (!isset($query[$months[$i]])) {
+					$query[$months[$i]] = 0;
+				}
+			}
+
+			ksort($query);
+			$result = [];
+
+			foreach ($query as $key => $value) {
+				$result[] = $value;
+			}
+
+			return $result;
 		});
 
 		$chart = new Chart;
 		$chart->dataset('User Activity Chart', 'line', $activities)->options([
 			'fill' => true,
 			'color' => '#4e73df',
-			'backgroundColor' => 'rgb(106, 90, 205, 0.5)'
+			'backgroundColor' => 'rgb(106, 90, 205, 0.7)'
 		]);
 	
 		return $chart->api();
