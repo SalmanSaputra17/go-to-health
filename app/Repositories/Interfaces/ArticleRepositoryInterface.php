@@ -4,13 +4,34 @@ namespace App\Repositories\Interfaces;
 
 interface ArticleRepositoryInterface
 {
-	public function all($option);
+    /**
+     * @param $option
+     * @return mixed
+     */
+    public function all($option);
 
-	public function create($request);
+    /**
+     * @param $request
+     * @return mixed
+     */
+    public function create($request);
 
-	public function findById($id);
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findById($id);
 
-	public function update($request, $id);
+    /**
+     * @param $request
+     * @param $id
+     * @return mixed
+     */
+    public function update($request, $id);
 
-	public function delete($id);
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function delete($id);
 }

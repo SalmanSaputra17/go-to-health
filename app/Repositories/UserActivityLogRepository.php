@@ -8,20 +8,32 @@ use App\Repositories\Interfaces\UserActivityLogRepositoryInterface;
 
 class UserActivityLogRepository implements UserActivityLogRepositoryInterface
 {
-	public function userList($option = 'get')
-	{
-		$field = User::select('*');
+    /**
+     * @param string $option
+     * @return mixed
+     */
+    public function userList($option = 'get')
+    {
+        $field = User::select('*');
 
-		return $option == 'get' ? $field->orderBy('username', 'asc')->get() : $field;
-	}
+        return $option == 'get' ? $field->orderBy('username', 'asc')->get() : $field;
+    }
 
-	public function findUserById($id)
-	{
-		return User::findOrFail($id);
-	}
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findUserById($id)
+    {
+        return User::findOrFail($id);
+    }
 
-	public function userLog($userId)
-	{
-		return UserActivityLog::select('*')->whereUserId($userId);
-	}
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function userLog($userId)
+    {
+        return UserActivityLog::select('*')->whereUserId($userId);
+    }
 }

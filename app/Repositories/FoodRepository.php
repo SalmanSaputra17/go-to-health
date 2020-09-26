@@ -7,35 +7,56 @@ use App\Repositories\Interfaces\FoodRepositoryInterface;
 
 class FoodRepository implements FoodRepositoryInterface
 {
-	public function all($option = 'get')
-	{
-		$field = Food::select(['id', 'name', 'calory', 'portion']);
+    /**
+     * @param string $option
+     * @return mixed
+     */
+    public function all($option = 'get')
+    {
+        $field = Food::select(['id', 'name', 'calory', 'portion']);
 
-		return $option == 'get' ? $field->orderBy('name', 'asc')->get() : $field;
-	}
+        return $option == 'get' ? $field->orderBy('name', 'asc')->get() : $field;
+    }
 
-	public function create($request)
-	{
-		$inputs = $request->all();
-		$inputs['created_by'] = auth()->user()->id;
+    /**
+     * @param $request
+     * @return mixed|void
+     */
+    public function create($request)
+    {
+        $inputs = $request->all();
+        $inputs['created_by'] = auth()->user()->id;
 
-		Food::create($inputs);
-	}
+        Food::create($inputs);
+    }
 
-	public function findById($id)
-	{
-		return Food::findOrFail($id);
-	}
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findById($id)
+    {
+        return Food::findOrFail($id);
+    }
 
-	public function update($request, $id)
-	{
-		$model = $this->findById($id);
-		$model->update($request->all());
-	}
+    /**
+     * @param $request
+     * @param $id
+     * @return mixed|void
+     */
+    public function update($request, $id)
+    {
+        $model = $this->findById($id);
+        $model->update($request->all());
+    }
 
-	public function delete($id)
-	{
-		$model = $this->findById($id);
-		$model->delete();
-	}
+    /**
+     * @param $id
+     * @return mixed|void
+     */
+    public function delete($id)
+    {
+        $model = $this->findById($id);
+        $model->delete();
+    }
 }

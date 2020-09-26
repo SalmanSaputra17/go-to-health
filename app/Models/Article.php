@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
-	use Sluggable, SoftDeletes;
+    use Sluggable, SoftDeletes;
 
     protected $guarded = [];
 
@@ -43,8 +43,11 @@ class Article extends Model
         });
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function admin()
     {
-    	return $this->belongsTo(\App\Admin::class, 'created_by', 'id');
+        return $this->belongsTo(\App\Admin::class, 'created_by', 'id');
     }
 }

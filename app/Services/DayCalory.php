@@ -4,84 +4,140 @@ namespace App\Services;
 
 class DayCalory
 {
-	private $height;
-	private $weight;
-	private $gender;
-	private $dateOfBirth;
-	private $activityLevel;
+    /**
+     * @var
+     */
+    private $height;
 
-	public function setHeight($height = 0)
-	{
-		$this->height = $height;
+    /**
+     * @var
+     */
+    private $weight;
 
-		return $this;
-	}
+    /**
+     * @var
+     */
+    private $gender;
 
-	public function setWeight($weight = 0)
-	{
-		$this->weight = $weight;
+    /**
+     * @var
+     */
+    private $dateOfBirth;
 
-		return $this;
-	}
+    /**
+     * @var
+     */
+    private $activityLevel;
 
-	public function setGender($gender = "")
-	{
-		$this->gender = $gender;
+    /**
+     * @param int $height
+     * @return $this
+     */
+    public function setHeight($height = 0)
+    {
+        $this->height = $height;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function setDateOfBirth($dateOfBirth = null)
-	{
-		$this->dateOfBirth = $dateOfBirth;
+    /**
+     * @param int $weight
+     * @return $this
+     */
+    public function setWeight($weight = 0)
+    {
+        $this->weight = $weight;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function setActivityLevel($activityLevel = "")
-	{
-		$this->activityLevel = $activityLevel;
+    /**
+     * @param string $gender
+     * @return $this
+     */
+    public function setGender($gender = "")
+    {
+        $this->gender = $gender;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function calculate()
-	{
-		$age = $this->howOld($this->dateOfBirth);
-		$BMR = 0;
+    /**
+     * @param null $dateOfBirth
+     * @return $this
+     */
+    public function setDateOfBirth($dateOfBirth = null)
+    {
+        $this->dateOfBirth = $dateOfBirth;
 
-		if ($age == 0) return 0;
+        return $this;
+    }
 
-		if ($this->gender == "Laki-laki") {
-			$BMR = 66.4730 + (13.7516 * $this->weight) + (5.0033 * $this->height) - (6.7550 * $age);
-		} elseif ($this->gender == "Perempuan") {
-			$BMR = 655.0955 + (9.5634 * $this->weight) + (1.8496 * $this->height) - (4.6756 * $age);
-		}
+    /**
+     * @param string $activityLevel
+     * @return $this
+     */
+    public function setActivityLevel($activityLevel = "")
+    {
+        $this->activityLevel = $activityLevel;
 
-		$result = $this->mapResult($BMR, $this->activityLevel);
+        return $this;
+    }
 
-		return $result;
-	}
+    /**
+     * @return float|int
+     */
+    public function calculate()
+    {
+        $age = $this->howOld($this->dateOfBirth);
+        $BMR = 0;
 
-	private function howOld($date)
-	{
-		list($year, $month, $day) = explode('-', $date);
+        if ($age == 0) {
+            return 0;
+        }
+
+        if ($this->gender == "Laki-laki") {
+            $BMR = 66.4730 + (13.7516 * $this->weight) + (5.0033 * $this->height) - (6.7550 * $age);
+        } elseif ($this->gender == "Perempuan") {
+            $BMR = 655.0955 + (9.5634 * $this->weight) + (1.8496 * $this->height) - (4.6756 * $age);
+        }
+
+        $result = $this->mapResult($BMR, $this->activityLevel);
+
+        return $result;
+    }
+
+    /**
+     * @param $date
+     * @return false|int|mixed|string
+     */
+    private function howOld($date)
+    {
+        [$year, $month, $day] = explode('-', $date);
 
         $yearDiff = date("Y") - $year;
         $monthDiff = date("m") - $month;
         $dayDiff = date("d") - $day;
 
-        if ($monthDiff < 0) $yearDiff--;
-            elseif (($monthDiff == 0) && ($dayDiff < 0)) $yearDiff--;
+        if ($monthDiff < 0) {
+            $yearDiff--;
+        } elseif (($monthDiff == 0) && ($dayDiff < 0)) {
+            $yearDiff--;
+        }
 
         return $yearDiff;
-	}
+    }
 
-	private function mapResult($BMR, $activityLevel)
-	{
-		$result = 0;
+    /**
+     * @param $BMR
+     * @param $activityLevel
+     * @return float
+     */
+    private function mapResult($BMR, $activityLevel)
+    {
+        $result = 0;
 
-		switch ($activityLevel) {
+        switch ($activityLevel) {
             case 'Tidak Aktif':
                 $result = $BMR * 1.2;
                 break;
@@ -104,5 +160,5 @@ class DayCalory
         }
 
         return round($result);
-	}
+    }
 }

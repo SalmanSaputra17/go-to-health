@@ -12,71 +12,91 @@ use App\Charts\UserActivityLogChart as Chart;
 
 class DashboardRepository implements DashboardRepositoryInterface
 {
-	public function loadTotalData()
-	{
-		$foods = Cache::rememberForever('__foods', function() {
+    /**
+     * @return array|mixed
+     */
+    public function loadTotalData()
+    {
+        $foods = Cache::rememberForever('__foods', function () {
             return Food::all()->count();
         });
 
-		$articles = Cache::rememberForever('__articles', function() {
+        $articles = Cache::rememberForever('__articles', function () {
             return Article::all()->count();
         });
 
-        $users = Cache::rememberForever('__users', function() {
+        $users = Cache::rememberForever('__users', function () {
             return User::all()->count();
         });
 
-		return [
-			'foods' => $foods,
-			'articles' => $articles,
-			'users' => $users
-		];
-	}
+        return [
+            'foods'    => $foods,
+            'articles' => $articles,
+            'users'    => $users
+        ];
+    }
 
-	public function lineChartInit()
-	{
-		$source = url('/home/line-chart-source');
+    /**
+     * @return \App\Charts\UserActivityLogChart|mixed
+     */
+    public function lineChartInit()
+    {
+        $source = url('/home/line-chart-source');
 
-		$chart = new Chart;
-		$chart->labels(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])->load($source);
-	
-		return $chart;
-	}
+        $chart = new Chart;
+        $chart->labels([
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ])->load($source);
 
-	public function lineChartSource($request)
-	{
-		$activities = Cache::rememberForever('__activities', function() {
-			$months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        return $chart;
+    }
 
-			$query = UserActivityLog::select(\DB::raw('MONTH(created_at) as month, COUNT(*) as total'))
-				->whereRaw('YEAR(created_at) = YEAR(NOW())')
-				->groupBy("month")
-				->pluck('total', 'month')
-				->toArray();
+    /**
+     * @param $request
+     * @return mixed|string
+     */
+    public function lineChartSource($request)
+    {
+        $activities = Cache::rememberForever('__activities', function () {
+            $months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-			for ($i = 0; $i < count($months); $i++) { 
-				if (!isset($query[$months[$i]])) {
-					$query[$months[$i]] = 0;
-				}
-			}
+            $query = UserActivityLog::select(\DB::raw('MONTH(created_at) as month, COUNT(*) as total'))->whereRaw('YEAR(created_at) = YEAR(NOW())')->groupBy("month")->pluck('total',
+                    'month')->toArray();
 
-			ksort($query);
-			$result = [];
+            for ($i = 0; $i < count($months); $i++) {
+                if ( ! isset($query[$months[$i]])) {
+                    $query[$months[$i]] = 0;
+                }
+            }
 
-			foreach ($query as $key => $value) {
-				$result[] = $value;
-			}
+            ksort($query);
+            $result = [];
 
-			return $result;
-		});
+            foreach ($query as $key => $value) {
+                $result[] = $value;
+            }
 
-		$chart = new Chart;
-		$chart->dataset('User Activity Chart', 'line', $activities)->options([
-			'fill' => true,
-			'color' => '#4e73df',
-			'backgroundColor' => 'rgb(106, 90, 205, 0.7)'
-		]);
-	
-		return $chart->api();
-	}
+            return $result;
+        });
+
+        $chart = new Chart;
+        $chart->dataset('User Activity Chart', 'line', $activities)->options([
+            'fill'            => true,
+            'color'           => '#4e73df',
+            'backgroundColor' => 'rgb(106, 90, 205, 0.7)'
+        ]);
+
+        return $chart->api();
+    }
 }

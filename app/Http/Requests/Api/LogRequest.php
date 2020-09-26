@@ -24,10 +24,10 @@ class LogRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required',
+            'user_id'  => 'required',
             'activity' => 'required|string|max:190',
-            'type' => 'required|string',
-            'ip' => 'required|string'
+            'type'     => 'required|string',
+            'ip'       => 'required|string'
         ];
     }
 }

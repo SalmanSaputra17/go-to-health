@@ -24,8 +24,8 @@ class FoodRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:100',
-            'calory' => 'required|numeric|min:0',
+            'name'    => 'required|string|max:100',
+            'calory'  => 'required|numeric|min:0',
             'portion' => 'required|numeric|min:0'
         ];
     }

@@ -10,17 +10,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-	use Notifiable, HasApiTokens, SoftDeletes;
+    use Notifiable, HasApiTokens, SoftDeletes;
 
     protected $table = 'users';
 
-	/**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'unique_id', 'username', 'gender', 'date_of_birth', 'email', 'password', 'active', 'activation_token'
+        'unique_id',
+        'username',
+        'gender',
+        'date_of_birth',
+        'email',
+        'password',
+        'active',
+        'activation_token'
     ];
 
     /**
@@ -29,7 +36,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'activation_token'
+        'password',
+        'remember_token',
+        'activation_token'
     ];
 
     /**
@@ -60,6 +69,9 @@ class User extends Authenticatable
         });
     }
 
+    /**
+     * @return string
+     */
     public static function generateUID()
     {
         $model = self::count();
@@ -67,6 +79,10 @@ class User extends Authenticatable
         return strtoupper("UID-" . self::makeLoop($model) . \Str::random(3));
     }
 
+    /**
+     * @param $num
+     * @return string
+     */
     public static function makeLoop($num)
     {
         $result = str_pad($num + 1, 7, 0, STR_PAD_LEFT);
@@ -74,8 +90,11 @@ class User extends Authenticatable
         return $result;
     }
 
-	public function logActivity()
-	{
-		return $this->hasMany(UserActivityLog::class, 'user_id', 'id');
-	}
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function logActivity()
+    {
+        return $this->hasMany(UserActivityLog::class, 'user_id', 'id');
+    }
 }

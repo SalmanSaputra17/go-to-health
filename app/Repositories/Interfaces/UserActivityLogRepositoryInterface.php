@@ -4,9 +4,21 @@ namespace App\Repositories\Interfaces;
 
 interface UserActivityLogRepositoryInterface
 {
-	public function userList($option);
+    /**
+     * @param $option
+     * @return mixed
+     */
+    public function userList($option);
 
-	public function findUserById($id);
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findUserById($id);
 
-	public function userLog($userId);
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function userLog($userId);
 }

@@ -4,9 +4,19 @@ namespace App\Repositories\Interfaces;
 
 interface DashboardRepositoryInterface
 {
-	public function loadTotalData();
+    /**
+     * @return mixed
+     */
+    public function loadTotalData();
 
-	public function lineChartInit();
+    /**
+     * @return mixed
+     */
+    public function lineChartInit();
 
-	public function lineChartSource($request);
+    /**
+     * @param $request
+     * @return mixed
+     */
+    public function lineChartSource($request);
 }

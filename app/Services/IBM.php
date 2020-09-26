@@ -4,60 +4,82 @@ namespace App\Services;
 
 class IBM
 {
-	private $height;
-	private $weight;
+    /**
+     * @var
+     */
+    private $height;
 
-	public function setHeight($height = 0)
-	{
-		$this->height = $height;
+    /**
+     * @var
+     */
+    private $weight;
 
-		return $this;
-	}
+    /**
+     * @param int $height
+     * @return $this
+     */
+    public function setHeight($height = 0)
+    {
+        $this->height = $height;
 
-	public function setWeight($weight = 0)
-	{
-		$this->weight = $weight;
+        return $this;
+    }
 
-		return $this;
-	}
+    /**
+     * @param int $weight
+     * @return $this
+     */
+    public function setWeight($weight = 0)
+    {
+        $this->weight = $weight;
 
-	public function calculate()
-	{
-		$toMeter = $this->height / 100;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function calculate()
+    {
+        $toMeter = $this->height / 100;
         $IBM = round($this->weight / ($toMeter * $toMeter), 2);
-    
+
         return [
-        	"IBM" => $IBM,
-        	"category" => $this->mapCategory($IBM)
+            "IBM"      => $IBM,
+            "category" => $this->mapCategory($IBM)
         ];
-	}
+    }
 
-	private function mapCategory($param)
-	{
-		$category = "";
+    /**
+     * @param $param
+     * @return string
+     */
+    private function mapCategory($param)
+    {
+        $category = "";
 
-		switch ($param) {
+        switch ($param) {
             case $param < 18.50:
-                $category = "KURUS";  
+                $category = "KURUS";
                 break;
 
             case $param >= 18.50 && $param <= 22.99:
-                $category = "NORMAL";  
+                $category = "NORMAL";
                 break;
 
             case $param >= 23.00 && $param <= 24.99:
-                $category = "OVERWEIGHT";  
+                $category = "KELEBIHAN BERAT BADAN";
                 break;
 
             case $param >= 25.00:
-                $category = "OBESITAS";  
+                $category = "OBESITAS";
                 break;
 
             default:
-                $category = "UNCATEGORIZED";
+                $category = "BELUM TERKATEGORI";
                 break;
         }
 
         return $category;
-	}
+    }
 }

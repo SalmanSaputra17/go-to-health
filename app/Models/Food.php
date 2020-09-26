@@ -13,9 +13,9 @@ class Food extends Model
 
     public static function boot()
     {
-    	parent::boot();
+        parent::boot();
 
-    	self::creating(function ($model) {
+        self::creating(function ($model) {
             cache()->forget("__foods");
         });
 
@@ -28,8 +28,11 @@ class Food extends Model
         });
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function admin()
     {
-    	return $this->belongsTo(\App\Admin::class, 'created_by', 'id');
+        return $this->belongsTo(\App\Admin::class, 'created_by', 'id');
     }
 }

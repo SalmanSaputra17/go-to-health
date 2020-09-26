@@ -6,15 +6,26 @@ use Illuminate\Http\Request;
 
 class BaseController extends Controller
 {
-	protected $view;
+    /**
+     * @var string
+     */
+    protected $view;
 
+    /**
+     * BaseController constructor.
+     */
     public function __construct()
     {
-    	$this->view = "";
+        $this->view = "";
     }
 
+    /**
+     * @param       $view
+     * @param array $data
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function renderView($view, $data = [])
     {
-    	return view($this->view . $view, $data);
+        return view($this->view . $view, $data);
     }
 }
